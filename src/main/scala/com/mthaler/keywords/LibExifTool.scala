@@ -32,4 +32,23 @@ class LibExifTool(path: Path) {
       throw new Exception("Unknown format: " + s)
     }
   }
+
+  def getDescription(p: Path): String = {
+    val builder = new ProcessBuilder(path.toString, "-description", p.toString)
+    val process = builder.start()
+    val reader = new BufferedReader(new InputStreamReader(process.getInputStream))
+    var line = reader.readLine()
+    val sb = new StringBuilder
+    while (line != null) {
+      sb.append(line)
+      line = reader.readLine()
+    }
+    val s = sb.toString()
+    val index = s.lastIndexOf(':')
+    if (index > 0) {
+      s.substring(index + 1).trim
+    } else {
+      throw new Exception("Unknown format: " + s)
+    }
+  }
 }
