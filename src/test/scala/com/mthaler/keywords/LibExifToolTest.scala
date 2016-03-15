@@ -23,6 +23,22 @@ class LibExifToolTest extends FunSuite {
     }
   }
 
+  test("setKeywords") {
+    val tempDir = Files.createTempDirectory("keywords")
+    try {
+      val f = tempDir.resolve("test.jpg")
+      val in = getClass.getResourceAsStream("mont_saint_michel-1437-2.jpg")
+      Files.copy(in, f)
+      assert(Files.exists(f))
+      new LibExifTool(Paths.get("/usr/bin/exiftool")).setKeywords(f, List("keyword1", "keyword2", "keyword 3"))
+      assertResult(List("keyword1", "keyword2", "keyword 3")) {
+        new LibExifTool(Paths.get("/usr/bin/exiftool")).getKeywords(f)
+      }
+    } finally {
+      Files.walkFileTree(tempDir, new DeleteDirVisitor)
+    }
+  }
+
   test("getDescription") {
     val tempDir = Files.createTempDirectory("keywords")
     try {

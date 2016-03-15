@@ -33,6 +33,15 @@ class LibExifTool(path: Path) {
     }
   }
 
+  def setKeywords(p: Path, keywords: List[String]): Unit = {
+    val builder = new ProcessBuilder(path.toString, "-keywords=" + keywords.mkString(","), p.toString)
+    val process = builder.start()
+    val exitValue = process.waitFor()
+    if (exitValue != 0) {
+      throw new Exception("Error: " + exitValue)
+    }
+  }
+
   def getDescription(p: Path): String = {
     val builder = new ProcessBuilder(path.toString, "-description", p.toString)
     val process = builder.start()
