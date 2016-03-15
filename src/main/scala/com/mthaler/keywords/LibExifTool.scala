@@ -51,4 +51,13 @@ class LibExifTool(path: Path) {
       throw new Exception("Unknown format: " + s)
     }
   }
+
+  def setDescription(p: Path, description: String): Unit = {
+    val builder = new ProcessBuilder(path.toString, "-description=" + description, p.toString)
+    val process = builder.start()
+    val exitValue = process.waitFor()
+    if (exitValue != 0) {
+      throw new Exception("Error: " + exitValue)
+    }
+  }
 }
